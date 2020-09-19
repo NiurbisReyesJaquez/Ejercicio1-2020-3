@@ -1,0 +1,109 @@
+﻿@page "/Estudiantes"
+@page "/Estudiantes/{EstudianteId:int}"
+
+@using Models
+@using Ejercicio1_2020_3.BLL
+@inject IToastService toast
+
+<EditForm Model="estudiantes" OnValidSubmit="Guardar">
+    <DataAnnotationsValidator></DataAnnotationsValidator>
+
+    <div class="card">
+        <div class="card-header">
+            <h3>Registro de estudiantes</h3>
+        </div>
+        <div class="card-body">
+
+            <form>
+                @*Id*@
+                    <div class="form-group">
+                        <div class="input-group">
+                            <InputNumber class="form-control col-4" @bind-Value="estudiantes.EstudianteId"></InputNumber>
+                            <ValidationMessage For="@(() => estudiantes.EstudianteId)"></ValidationMessage>
+                            <button type="button" class="btn btn-primary input-group-append" @onclick="Buscar">Buscar</button>
+                        </div>
+                    </div>
+                @*Nombre*@
+                <div class="form-group">
+                    <label>Nombre</label>
+                    <InputText class="form-control" @bind-Value="estudiantes.Nombres"></InputText>
+                    <ValidationMessage For="@(() => estudiantes.Nombres)"></ValidationMessage>
+                </div>
+                @*Semestre*@
+                <div class="form-group">
+                    <label>Semestre</label>
+                    <InputNumber class="form-control" @bind-Value="estudiantes.Semestre"></InputNumber>
+                    <ValidationMessage For="@(() => estudiantes.Semestre)"></ValidationMessage>
+                </div>
+
+            </form>
+
+        </div>
+        <div class="card-footer">
+            <div class="form-group text-center">
+                <button type="button" class="btn btn-primary" @onclick="Nuevo">Nuevo</button>
+                <button type="submit" class="btn btn-success">Guardar</button>
+                <button type="button" class="btn btn-danger" @onclick="Eliminar">Eliminar</button>
+            </div>
+        </div>
+    </div>
+
+</EditForm>
+
+
+@code {
+    [Parameter]
+    public int EstudianteId { get; set; }
+
+    private Estudiantes estudiantes;
+
+    protected override void OnInitialized()
+    {
+        Nuevo();
+        Buscar();
+    }
+    public void Nuevo()
+    {
+        estudiantes = new Estudiantes();
+    }
+    public void Buscar()
+    {
+        if(estudiantes.EstudianteId > 0)
+        {
+            var encontrado = EstudiantesBLL.Buscar(estudiantes.EstudianteId);
+
+            if (encontrado != null)
+                this.estudiantes = encontrado;
+            else
+                toast.ShowWarning("No encontrado");
+        }
+    }
+    public void Guardar()
+    {
+        bool guardado = EstudiantesBLL.Guardar(estudiantes);
+
+        if (guardado)
+        {
+            Nuevo();
+            toast.ShowSuccess("Guardado exitosamente");
+        }
+        else
+        {
+            toast.ShowError("No se pudo guardar");
+        }
+    }
+    public void Eliminar()
+    {
+        bool eliminado = EstudiantesBLL.Eliminar(estudiantes.EstudianteId);
+
+        if (eliminado)
+        {
+            Nuevo();
+            toast.ShowSuccess("Eliminado exitosamente");
+        }
+        else
+        {
+            toast.ShowError("No se pudo eliminar");
+        }
+    }
+}
