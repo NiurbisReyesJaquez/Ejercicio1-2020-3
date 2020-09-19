@@ -10,6 +10,7 @@ namespace Ejercicio1_2020_3.DAL
     public class Contexto : DbContext
     {
         public DbSet<Estudiantes> Estudiantes { get; set; }
+        public DbSet<Personas> Personas { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
