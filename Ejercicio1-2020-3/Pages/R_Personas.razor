@@ -85,6 +85,18 @@
     {
         Nuevo();
         Buscar();
+
+        if (PersonasId > 0)
+            Buscar(PersonasId);
+    }
+    public void Buscar(int id)
+    {
+        var encontrado = PersonasBLL.Buscar(id);
+
+        if (encontrado != null)
+            this.personas = encontrado;
+        else
+            toast.ShowWarning("No encontrado");
     }
 
     public void Nuevo()

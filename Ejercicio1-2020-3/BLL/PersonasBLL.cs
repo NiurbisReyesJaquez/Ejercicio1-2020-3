@@ -46,9 +46,11 @@ namespace Ejercicio1_2020_3.BLL
             {
                 contexto.Personas.Add(persona);
                 paso = contexto.SaveChanges() > 0;
+
             }catch(Exception)
             {
                 throw;
+
             }finally
             {
                 contexto.Dispose();
@@ -64,10 +66,12 @@ namespace Ejercicio1_2020_3.BLL
             {
                 contexto.Entry(personas).State = EntityState.Modified;
                 paso = contexto.SaveChanges() > 0;
-            }catch(Exception)
+            }
+            catch (Exception)
             {
                 throw;
-            }finally
+            }
+            finally
             {
                 contexto.Dispose();
             }

@@ -1,0 +1,103 @@
+﻿@page "/consultapersonas"
+
+@using Ejercicio1_2020_3.Models
+@using Ejercicio1_2020_3.BLL
+
+<div class="card">
+    <div class="card-header">
+        <div class="row">
+            <div class="col-4">
+                <div class="form-group">
+                    <label>Filtro</label>
+                    <select class="form-control" @bind="Filtro">
+                        <option value="0">Opciones</option>
+                        <option value="1">ID</option>
+                        <option value="2">Nombre</option>
+                        <option value="3">Telefono</option>
+                    </select>
+                </div>
+            </div>
+            <div class="col-4">
+                <div class="form-group">
+                    <label>criterio</label>
+                    <input type="text" class="form-control" @bind="Criterio" placeholder="Escriba un criterio"/>
+                </div>
+            </div>
+            <div class="col-2">
+                <div class="form-group">
+                    <label> </label>
+                    <button type="button" class="btn btn-lg btn-primary btn-block" @onclick="Consultar">Consultar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="body">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Nombre</th>
+                    <th>Telefono</th>
+                    <th>Cedula</th>
+                    <th>Direccion</th>
+                    <th>Fecha de nacimiento</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in ListaConsulta)
+                {
+                <tr>
+                    <td>@item.PersonaId</td>
+                    <td>@item.Nombre</td>
+                    <td>@item.Telefono</td>
+                    <td>@item.Cedula</td>
+                    <td>@item.Direccion</td>
+                    <td>@item.FechaNacimiento</td>
+                    <td><a href="@($"personas/{item.PersonaId}")">Ver</a></td>
+                </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+    <div class="footer">
+
+    </div>
+</div>
+
+@code {
+
+    public List<Personas> ListaConsulta { get; set; } = new List<Personas>();
+    public int Filtro { get; set; }
+    public string Criterio { get; set; } = string.Empty;
+
+    public void Consultar()
+    {
+        if(Criterio != string.Empty)
+        {
+            switch (Filtro)
+            {
+                case 0:
+                    ListaConsulta = PersonasBLL.GetList(p => true);
+                    break;
+                case 1:
+                    int id = Convert.ToInt32(Criterio);
+                    ListaConsulta = PersonasBLL.GetList(p => p.PersonaId == id);
+                    break;
+                case 2:
+                    ListaConsulta = PersonasBLL.GetList(p => p.Nombre.Contains(Criterio));
+                    break;
+                case 3:
+                    ListaConsulta = PersonasBLL.GetList(p => p.Telefono.Contains(Criterio));
+                    break;
+            }
+
+        }
+        else
+        {
+            ListaConsulta = PersonasBLL.GetList(p => true);
+        }
+
+    }
+
+}
